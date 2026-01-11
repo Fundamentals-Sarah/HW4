@@ -128,3 +128,39 @@ regionaggregateCSV=read.csv("regionaggregate.csv")
 #I check that the cleaned csv can be read in correctly
 str(regionaggregateCSV)
 ```
+
+```{r}
+#Taking the spreadsheet generated in Exercise 1, I remove the region column and name this data frame wide_format
+wide_format <- merge_allclean[ , -c(2)]
+```
+
+```{r}
+#I apply the long formatting to the wide_format version of the spreadsheet and generate it to check that it looks as expected
+long_format=tidyr::pivot_longer(data=wide_format,
+                                cols=!Country_Name, 
+                                names_to = "CIA_Variable",
+                                values_to = "Value")
+long_format
+```
+
+```{r}
+#I save as an RDS file
+saveRDS(long_format,"long_format.RDS")
+```
+
+```{r}
+#I name my file and ensure it is pulled in correctly in the RDS format
+longformatRDS=readRDS("long_format.RDS")
+str(longformatRDS)
+```
+
+```{r}
+#I save my cleaned file as a csv
+write.csv(long_format,"longformat.csv", row.names=FALSE)
+longformatCSV=read.csv("longformat.csv")
+```
+
+```{r}
+#I check that the cleaned csv can be read in correctly
+str(longformatCSV)
+```

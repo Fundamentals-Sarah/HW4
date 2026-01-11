@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+#I load the first csv file from github
+linkcsv="https://github.com/Fundamentals-Sarah/HW4/raw/refs/heads/main/maternal_cleaned.csv"
+```
+```{r}
+#I import rio package for this file.
+matmort=rio::import(file = linkcsv)
+```
+
+
+```{r}
+#I load the second csv file from github
+linkcsv2="https://github.com/Fundamentals-Sarah/HW4/raw/refs/heads/main/infantmortality_cleaned.csv"
+```
+```{r}
+#I import rio package for this file.
+infmort=rio::import(file = linkcsv2)
+```
+
+```{r}
+#I load the third csv file from github
+linkcsv3="https://github.com/Fundamentals-Sarah/HW4/raw/refs/heads/main/lifeexpectancy_cleaned.csv"
+```
+```{r}
+#I import rio package for this file.
+lifexclean=rio::import(file = linkcsv3)
+```
+```{r}
+#Since I will be merging by Country Name, and each sheet has its own region column, I want to make the order of the columns Country Name, Region, then the remaining variable data elements. To do this, I reorder column names in my first spreadsheet so that Region column is second.
+matmort <- matmort[ , c("Country_Name", "Region", "Maternal_Death_Rate")]
+```
+
+```{r}
+#I take a look at what merging the maternal and infant mortality spreadsheets will look like
+merge(matmort,infmort, by.x='Country_Name', by.y='Country_Name3')
+```
+
+```{r}
+#I create the new data object merging maternal and infant mortality rates information
+merge1 <- merge(matmort, infmort, by.x = "Country_Name", by.y = "Country_Name3")
+```
+```{r}
+#I then see what merging maternal/infant mortality with life expectancy will look like
+merge(merge1,lifexclean, by.x='Country_Name', by.y='Country_Name2')
+```
+```{r}
+#I go ahead and merge the life expectancy data with the other two datasets
+mergeall <- merge(merge1, lifexclean, by.x = "Country_Name", by.y = "Country_Name2")
+```
+
+```{r}
+#I want to see all the column names that are now included in my merged data
+names(mergeall)
+```
+```{r}
+#I remove the repeating Region columns, since I just need one
+merge_allclean <- mergeall[ , -c(5, 7)]
+```
+
+```{r}
+#I save as an RDS file
+saveRDS(merge_allclean,"merged_data.RDS")
+```
+
+```{r}
+#I name my file and ensure it is pulled in correctly in the RDS format
+mergeddataRDS=readRDS("merged_data.RDS")
+str(mergeddataRDS)
+```
+
+```{r}
+#I save my cleaned file as a csv
+write.csv(merge_allclean,"merged_data_cleaned.csv", row.names=FALSE)
+merged_data_cleanedCSV=read.csv("merged_data_cleaned.csv")
+```
+
+```{r}
+#I check that the cleaned csv can be read in correctly
+str(merged_data_cleanedCSV)
+```

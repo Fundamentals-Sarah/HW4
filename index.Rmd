@@ -85,3 +85,46 @@ merged_data_cleanedCSV=read.csv("merged_data_cleaned.csv")
 #I check that the cleaned csv can be read in correctly
 str(merged_data_cleanedCSV)
 ```
+```{r}
+#I install dplyr library
+library(dplyr)
+```
+```{r}
+#I explore what the data will look like if I aggregate by Region and calculate the median of the data element variables across each region
+merge_allclean |>
+  group_by(Region) |>
+  summarize(Maternal_Death_Rate_Median = median(Maternal_Death_Rate),
+            Infant_Mortality_Rate_Median = median(Infant_Mortality_Rate),
+            Life_Expectancy_Median = median(Life_Expectancy))
+```
+
+```{r}
+#I implement the operation above, naming the new data frame region_aggregate
+region_aggregate <- merge_allclean |>
+  group_by(Region) |>
+  summarize(Maternal_Death_Rate_Median = median(Maternal_Death_Rate),
+            Infant_Mortality_Rate_Median = median(Infant_Mortality_Rate),
+            Life_Expectancy_Median = median(Life_Expectancy))
+```
+
+```{r}
+#I save as an RDS file
+saveRDS(region_aggregate,"regionaggregate.RDS")
+```
+
+```{r}
+#I name my file and ensure it is pulled in correctly in the RDS format
+regionaggregateRDS=readRDS("regionaggregate.RDS")
+str(regionaggregateRDS)
+```
+
+```{r}
+#I save my cleaned file as a csv
+write.csv(region_aggregate,"regionaggregate.csv", row.names=FALSE)
+regionaggregateCSV=read.csv("regionaggregate.csv")
+```
+
+```{r}
+#I check that the cleaned csv can be read in correctly
+str(regionaggregateCSV)
+```

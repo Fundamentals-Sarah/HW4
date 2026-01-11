@@ -65,6 +65,22 @@ merge_allclean <- mergeall[ , -c(5, 7)]
 ```
 
 ```{r}
+#I check the overall view for the data frame I've generated
+str(merge_allclean)
+```
+
+```{r}
+#I make region a factor so it is considered categorical
+merge_allclean$Region <- factor(merge_allclean$Region)
+```
+
+
+```{r}
+#I check that region is now considered a factor
+str(merge_allclean)
+```
+
+```{r}
 #I save as an RDS file
 saveRDS(merge_allclean,"merged_data.RDS")
 ```
